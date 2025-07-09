@@ -69,7 +69,6 @@ app.post('/books', async (req, res) => {
         res.status(201).json(newBook);
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: 'Server error while creating book' });
     }
 });
@@ -109,6 +108,26 @@ app.put('/books/:id', async (req, res) => {
 
 });
 
+app.delete('/books/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            return res.status(404).json({ error: 'Book not found' });
+        }
+
+        const deletedBook = await Book.findByIdAndDelete(id);
+
+        if(!deletedBook){
+            return res.status(404).json({ error: 'Book not found' });
+        }
+
+        res.status(202).send();
+
+    } catch (error) {
+        res.status(500).json({ error: 'Server error while deleting book' });
+    }
+});
 
 
 app.listen(PORT, () => {
