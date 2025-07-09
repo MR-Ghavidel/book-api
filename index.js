@@ -33,12 +33,12 @@ app.get('/books/:id', async (req, res) => {
     try {
         const id = req.params.id;
         if(!mongoose.Types.ObjectId.isValid(id)){
-            res.status(404).json({ error: 'Book not found'});
+            return res.status(404).json({ error: 'Book not found'});
         }
 
         const book = await Book.findById(id);
         if(!book){
-            res.status(404).json({ error: 'Book not found'});
+            return res.status(404).json({ error: 'Book not found'});
         }
 
         res.json(book);
