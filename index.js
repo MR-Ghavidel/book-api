@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = 4000;
+app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
@@ -24,8 +25,34 @@ app.get('/books', async (req, res) => {
         const allBooks = await Book.find({});
         res.json(allBooks);
     } catch (error) {
-        res.status(500).json({ error: 'Server error while fetching todos'});
+        res.status(500).json({ error: 'Server error while fetching books'});
     }
+});
+
+app.post('/books', async (req, res) => {
+try {
+    if(!req.body.title){
+        return res.status(400).json({ error: 'Title is required.'});
+    }
+    if(!req.body.author){
+        return res.status(400).json({ error: 'Author is required.'});
+    }
+    if(!req.body.pages){
+        return res.status(400).json({ error: 'Pages is required.'});
+    }
+    
+    const newBook = await Book.create({
+        title: req.body.title,
+        author: req.body.author,
+        pages: req.body.pages
+    });
+
+    res.status(201).json(newBook);
+
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error while creating book'});
+}
 });
 
 
