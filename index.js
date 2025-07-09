@@ -122,7 +122,7 @@ app.delete('/books/:id', async (req, res) => {
             return res.status(404).json({ error: 'Book not found' });
         }
 
-        res.status(202).send();
+        res.status(204).send();
 
     } catch (error) {
         res.status(500).json({ error: 'Server error while deleting book' });
