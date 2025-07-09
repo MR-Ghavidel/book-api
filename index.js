@@ -29,6 +29,25 @@ app.get('/books', async (req, res) => {
     }
 });
 
+app.get('/books/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            res.status(404).json({ error: 'Book not found'});
+        }
+
+        const book = await Book.findById(id);
+        if(!book){
+            res.status(404).json({ error: 'Book not found'});
+        }
+
+        res.json(book);
+
+    } catch (error) {
+        res.status(500).json({ error: 'Server error while fetching book'});
+    }
+});
+
 app.post('/books', async (req, res) => {
 try {
     if(!req.body.title){
