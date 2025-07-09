@@ -14,11 +14,19 @@ mongoose.connect(process.env.MONGO_URI)
     console.error('Error connecting to MongoDB:', error);
 });
 
+//Route
 app.get('/', (req, res) => {
     res.send('BOOK API');
 });
 
-
+app.get('/books', async (req, res) => {
+    try {
+        const allBooks = await Book.find({});
+        res.json(allBooks);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error while fetching todos'});
+    }
+});
 
 
 
